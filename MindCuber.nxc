@@ -33,7 +33,7 @@
 // Define NXT_8527 to run on the "Orange Box" variant of MindCuber rather
 // than the default variant for NXT 2.0
 
-#define NXT_8527
+// #define NXT_8527
 
 // Define SOLVE_PATTERN and one or more PATTERN_...s to "solve" to a pattern
 // If ONLY_PATTERNS is also defined, MindCuber will always create one of the
@@ -64,7 +64,7 @@
 // Define LOG to enable logging to a file to help diagnose color
 // discrimination issues
 
-//#define LOG
+#define LOG
 
 // Include lookup tables of moves
 #include "mcmoves.h"
