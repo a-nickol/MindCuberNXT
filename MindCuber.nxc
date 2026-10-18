@@ -649,10 +649,13 @@ void move_rel(int m, long pos, long off = 0) {
 #define T_SCNR  103
 #define T_SEDG  87
 #else
+// Scan positions tuned for the GAN 356 RS 3x3 stickerless speed cube
+// (56 mm). The original values for a standard Rubik's Cube were
+// T_SCNR 103 and T_SEDG 87.
 #define T_SOFF  10
 #define T_SCNT  10
-#define T_SCNR  103
-#define T_SEDG  87
+#define T_SCNR  80
+#define T_SEDG  60
 #endif
 #define T_TILT  85
 #define T_TAWY  25
