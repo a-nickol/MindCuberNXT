@@ -1,5 +1,88 @@
-MindCuber
-=========
+MindCuber NXT – GAN 356 RS Edition
+==================================
+
+This is a fork of [dlech/MindCuberNXT](https://github.com/dlech/MindCuberNXT),
+which contains David Gilday's original MindCuber source code for LEGO
+MINDSTORMS NXT. This fork adapts MindCuber so that it can solve the
+**GAN 356 RS 3x3 stickerless speed cube** instead of a standard Rubik's Cube.
+
+Improvements in this fork
+-------------------------
+
+- **Support for the GAN 356 RS stickerless speed cube**
+  The GAN cube is smaller (56 mm) than a standard Rubik's Cube, so the color
+  sensor missed the tiles at the original scan positions. The sensor arm
+  positions for the NXT 2.0 variant were re-tuned in `MindCuber.nxc`:
+
+  | Constant | Meaning                  | Original | GAN 356 RS |
+  |----------|--------------------------|---------:|-----------:|
+  | `T_SCNR` | sensor position, corners |      103 |         80 |
+  | `T_SEDG` | sensor position, edges   |       87 |         60 |
+
+- **3D-printable centering adapter**
+  `gan356_centering_adapter.scad` (OpenSCAD source) and
+  `gan356_centering_adapter.stl` (ready to print) describe an insert for the
+  cube tray. Its funnel shape guides the smaller cube into the center and
+  holds it firmly in position, so every scan and turn hits the cube at the
+  same spot. The main dimensions are parameters at the top of the SCAD file
+  and can be adjusted for other cube sizes.
+
+- **NXT 2.0 variant as default**
+  `NXT_8527` is disabled again, so the code builds for the standard NXT 2.0
+  version of MindCuber out of the box.
+
+- **Color scan logging enabled**
+  `LOG` is defined by default. During each scan the robot writes the raw and
+  processed sensor values to `mc.log` on the NXT.
+
+- **Log analyzer (`analyze_log.js`)**
+  A Node.js script that reads `mc.log`, re-implements MindCuber's color
+  classification and replays it for all six discrimination heuristics. It
+  reports:
+  - ambient light level seen by the sensor,
+  - the lightness spread per face (a hint for mechanical positioning issues),
+  - which faces / tiles were classified as which color,
+  - which edges and corners could not be matched to a valid cube,
+  - the measured RGB/HSL values of the six face centers and practical
+    tips for glare and lighting problems.
+
+- **Calibration reader (`read_mccfg.ps1`)**
+  A PowerShell script that decodes the white balance multipliers stored in
+  `mccfg.dat` and warns if the calibration looks wrong (e.g. when a colored
+  face instead of the white face was used for calibration).
+
+- **Sample data**
+  `mc.log` and `mccfg.dat` from real runs with the GAN 356 RS are included,
+  so the analysis tools can be tried out right away.
+
+Analyzing a scan
+----------------
+
+1. Run MindCuber on the NXT with `LOG` enabled.
+2. Copy `mc.log` (and optionally `mccfg.dat`) from the NXT into this folder,
+   for example with the NXT Explorer in BricxCC (Tools/NXT Explorer).
+3. Run the analyzer and the calibration reader:
+
+        node analyze_log.js
+        .\read_mccfg.ps1
+
+Files
+-----
+
+| File                            | Description                                   |
+|---------------------------------|-----------------------------------------------|
+| `MindCuber.nxc`                 | Main NXC program (tuned for the GAN 356 RS)   |
+| `mcmoves.h`                     | Move lookup tables (unchanged)                |
+| `gan356_centering_adapter.scad` | OpenSCAD source of the centering adapter      |
+| `gan356_centering_adapter.stl`  | Printable STL of the centering adapter        |
+| `analyze_log.js`                | Log and color classification analyzer         |
+| `read_mccfg.ps1`                | Reader for the white balance calibration file |
+| `mc.log`, `mccfg.dat`           | Sample log and calibration data               |
+
+---
+
+Original MindCuber README
+========================
 
 By David Gilday
 
